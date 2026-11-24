@@ -2598,9 +2598,10 @@ function update(dt){if(state!=='playing'||paused)return;t+=dt;if(levelIntroTime>
  fish.rot=fish.vy<0?-.5:fish.vy>0?.9:0;
  for(const b of bubbles){b.y-=b.s*dt;if(b.y<-10){b.y=H+10;b.x=Math.random()*W;}}
  if(!endlessMode){maybeSpawnWeapon();updateWeaponPickup(dt);}const last=obstacles[obstacles.length-1];const spacing=endlessMode?Math.max(170,218-Math.min(score,180)*.24):Math.max(164,204-Math.min(score,28)*1.35);if(!boss&&!miniBattle&&miniBossCountdown===0&&postBossSwimDelay===0&&(!last||last.x<W-spacing))obstacles.push(makeObstacle(W+100));
- for(const o of obstacles){o.age+=dt;const travelSpeed=(o.type==='hook'||o.type==='net')?(o.travelSpeed??=(endlessMode?endlessSpeed():speed)):(endlessMode?endlessSpeed():speed);o.x-=travelSpeed*dt;
+ for(const o of obstacles){o.age+=dt;
+ // Mobile V6: hooks and nets use the same per-step horizontal movement as logs.
+ o.x-=(endlessMode?endlessSpeed():speed)*dt;
  // All moving obstacle positions and hitboxes are computed from the same current coordinates.
- // Nets and hooks maintain constant elapsed-time horizontal movement.
  if(o.type==='greatwhite'||o.type==='bullshark'||o.type==='northernpike'||o.type==='morayeel'||o.type==='trident'){
    // Gentle vertical pursuit, never teleporting or accelerating the trout.
    // Track only while approaching, then commit to the current swimming lane.
